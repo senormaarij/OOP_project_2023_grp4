@@ -1,11 +1,15 @@
 #include "game.hpp"
 #include "loadtexture.hpp"
 #include "GameObj.hpp"
+#include <vector>
 
 
 Player* player;
-
-
+GameObject *obj1;
+GameObject *obj2;
+std::vector<GameObject*> gameObjects;
+std::vector<GameObject*> map;
+int i =0;
 SDL_Renderer* Game::Renderer = nullptr;
 
 
@@ -24,8 +28,13 @@ void Game::init(const char* title, int x, int y)
 
 	
 	player = new Player("assets/fire..png");
+	obj1 = new Objects("assets/Sprite-0001.jpg", 600, 200);
+	obj2 = new Objects("assets/platform.png", 400, 100);
 	
+	gameObjects.push_back(obj1);
+	gameObjects.push_back(obj2);
 
+	
 }
 
 bool Game::isRunning(){
@@ -35,12 +44,18 @@ bool Game::isRunning(){
 void Game::render(){
 	SDL_RenderClear(Renderer);
 	player->Render();
+	obj1->Render();
+	obj2->Render();
 	SDL_RenderPresent(Renderer);
 }
 
 void Game::update(){
-	player->Update();
-	std::cout << std::endl;
+	player->Update(gameObjects);
+
+	obj1->Update();
+	obj2->Update();
+	std::cout << """""""""" << std::endl;
+	//std::cout <<player->returnmove() << std::endl;
 
 }
 
