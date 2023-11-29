@@ -156,35 +156,16 @@ Objects::Objects(const char* filename,int x, int y) : GameObject(filename,x, y){
 void Player::CollisionY(const std::vector<GameObject*>& objects) 
 {
     for (GameObject* obj : objects) {
-        CollisionY(obj);
         Collision(obj);
     }
 }
 
-
-void Player::CollisionY(GameObject* obj) {
-    if (SDL_HasIntersection(&destR, &obj->destR)) {
-        if (velocityY > 0) {
-            // Moving down, adjust player position to the top of the colliding object
-            //ypos = obj->destR.y - destR.h;
-            // Stop vertical movement
-            velocityY = 0;
-        } else if (velocityY < 0) {
-            // Moving up, adjust player position to the bottom of the colliding object
-            ypos = obj->destR.y + obj->destR.h;
-            // Stop vertical movement
-            velocityY = 0;
-        }
-    }
-}
-
-
-
 void Player::Collision(GameObject *g) {
     // Check for intersection in both x and y dimensions
-
-    // Handle collision based on the collision side
-    if (SDL_HasIntersection(&destR, &g->destR))
+    if (destR.x < g->destR.x + g->destR.w &&
+        destR.x + destR.w > g->destR.x &&
+        destR.y < g->destR.y + g->destR.h &&
+        destR.y + destR.h > g->destR.y)
     {
         // Calculate the overlap in both dimensions
         int xOverlap = std::min(destR.x + destR.w, g->destR.x + g->destR.w) - std::max(destR.x, g->destR.x);
@@ -205,9 +186,22 @@ void Player::Collision(GameObject *g) {
             velocityX = 0;
         } else {
             // Adjust vertical position
-            CollisionY(g);
+            if (destR.y + destR.h / 2 < g->destR.y + g->destR.h / 2) {
+                // Player is colliding from the top, adjust position above the object
+                //ypos = g->destR.y - destR.h;
+            } else {
+                // Player is colliding from the bottom, adjust position below the object
+                ypos = g->destR.y + g->destR.h;
+            }
 
+            // Stop vertical movement
+            velocityY = 0;
         }
     }
 }
+
+
+
+
+
 
