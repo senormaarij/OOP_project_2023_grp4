@@ -3,7 +3,7 @@
 #include "GameObj.hpp"
 #include <vector>
 
-
+Mix_Music *music=nullptr;
 Player* player;
 GameObject *obj1;
 GameObject *obj2;
@@ -26,7 +26,20 @@ void Game::init(const char* title, int x, int y)
 
 	SDL_SetRenderDrawColor(Renderer,255,255,255,255);
 
-	
+	// Initialize SDL_mixer for audio
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        std::cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
+    }
+	// Load the audio file
+    music = Mix_LoadMUS("assets/Hitman(chosic.com).mp3");
+
+    if (music == nullptr) {
+        std::cout << "Failed to load music! SDL_mixer Error: " << Mix_GetError() << std::endl;
+    } else {
+        Mix_PlayMusic(music, -1); // Play the loaded music infinitely
+    }
+
+
 	player = new Player("assets/fire..png");
 	obj1 = new Objects("assets/Sprite-0001.jpg", 600, 200);
 	obj2 = new Objects("assets/platform.png", 400, 100);
