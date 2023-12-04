@@ -1,6 +1,7 @@
 #include "GameObj.hpp"
 #include "loadtexture.hpp"
 #include "Game.hpp"  // Assuming Game::Renderer is defined here
+#include <cmath>
 
 GameObject::GameObject(const char* filename) {
 
@@ -103,7 +104,7 @@ void Player::Update(const std::vector<GameObject*>& objects) {
     destR.y = ypos;
 
     Gravity();
-    CollisionY(objects);
+    Collision(objects);
 }
 
 void Objects::Update()
@@ -153,9 +154,11 @@ void Player::MoveLeft() {
 
 Objects::Objects(const char* filename,int x, int y) : GameObject(filename,x, y){};
 
-void Player::CollisionY(const std::vector<GameObject*>& objects) 
+void Player::Collision(const std::vector<GameObject*>& objects) 
 {
+    
     for (GameObject* obj : objects) {
+        
         Collision(obj);
     }
 }
@@ -188,7 +191,9 @@ void Player::Collision(GameObject *g) {
             // Adjust vertical position
             if (destR.y + destR.h / 2 < g->destR.y + g->destR.h / 2) {
                 // Player is colliding from the top, adjust position above the object
-                //ypos = g->destR.y - destR.h;
+                velocityY  = 0;
+                ypos = g->destR.y - destR.h;
+                
             } else {
                 // Player is colliding from the bottom, adjust position below the object
                 ypos = g->destR.y + g->destR.h;
@@ -198,6 +203,54 @@ void Player::Collision(GameObject *g) {
             velocityY = 0;
         }
     }
+}
+
+Oscillator::Oscillator(const char* filename,int x, int y) :Objects(filename, x, y){};
+
+void Oscillator::Update()
+{
+    srcR.w = 124;
+    srcR.h = 64;
+    srcR.x = 0;
+    srcR.y = 0;
+    destR.w = srcR.w / 2;
+    destR.h = srcR.h / 2;
+
+    //std::cout << velocityX << "\n";
+    xpos = xpos;
+
+    // Update ypos based on the sine wave for oscillation
+    //using sin wave because it oscillates
+    double time = SDL_GetTicks() / 1000.0;
+    double amplitude = 100;
+    double frequency = 0.25;
+    double yOffset = amplitude * std::sin(2 * M_PI * frequency * time); //the offset gets value from -1 to 1 multiplied by the amp that we set
+    // so it goes -100 to 100
+
+    ypos = 500 + yOffset; // 500 is the base position, adjust as needed
+    // adding that here so it oscillates 
+
+    if (ypos > 500) {
+        ypos = 500;
+    }
+
+    destR.x = xpos;
+    destR.y = static_cast<int>(ypos); ///setting the destR.y to the new ypos so no issues arise
+}
+
+
+Fire::Fire(const char* filename, int x, int y) : Objects(filename , x, y){};
+void Fire::Update()
+{
+    srcR.w = 64;
+    srcR.h = 64;
+    srcR.x = 0;
+    srcR.y = 0;
+    destR.w = srcR.w / 2;
+    destR.h = srcR.h / 2;
+
+    destR.x = xpos;
+    destR.y = ypos;   
 }
 
 

@@ -7,6 +7,8 @@ Mix_Music *music = nullptr;
 Player* player;
 GameObject *obj1;
 GameObject *obj2;
+GameObject *osc1;
+//GameObject *fire;
 std::vector<GameObject*> gameObjects;
 std::vector<GameObject*> map;
 int i = 0;
@@ -47,9 +49,13 @@ void Game::init(const char* title, int x, int y)
     player = new Player("assets/fire..png");
     obj1 = new Objects("assets/Sprite-0001.jpg", 600, 200);
     obj2 = new Objects("assets/platform.png", 400, 100);
+    osc1 = new Oscillator("assets/oscillator.png", 400,500);
+    //fire = new Fire("assets/Daco_5889570.png",600,500);
 
     gameObjects.push_back(obj1);
     gameObjects.push_back(obj2);
+    gameObjects.push_back(osc1);
+    //gameObjects.push_back(fire);
 }
 
 bool Game::isRunning()
@@ -70,6 +76,7 @@ void Game::render()
         player->Render();
         obj1->Render();
         obj2->Render();
+        osc1->Render();
     }
 
     SDL_RenderPresent(Renderer);
@@ -82,6 +89,7 @@ void Game::update()
         player->Update(gameObjects);
         obj1->Update();
         obj2->Update();
+        osc1->Update();
     }
 
     std::cout << """""""""" << std::endl;
@@ -130,4 +138,5 @@ void Game::close()
     Window = NULL;
     Renderer = NULL;
     SDL_Quit();
+
 }

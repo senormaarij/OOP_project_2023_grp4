@@ -35,8 +35,8 @@ public:
     void MoveLeft();
     void Update(const std::vector<GameObject*>& objects);
     void Collision(GameObject *g);
-    void CollisionY(const std::vector<GameObject*>& objects);
-    void CollisionY(GameObject *g);
+    void Collision(const std::vector<GameObject*>& objects);
+    //void Collisiony(GameObject *g);
     //bool CollisionX(GameObject *g);
 
 
@@ -47,5 +47,20 @@ class Objects : public GameObject
     public:
         static int counter;
         Objects(const char* filename,int x, int y);
+        void Update();
+};
+
+class Oscillator : public Objects
+{
+    public:
+        Oscillator(const char* filename, int x, int y);
+        void Update();
+};
+
+
+class Fire : public Objects
+{
+    public:
+        Fire(const char* filename, int x, int y);
         void Update();
 };
