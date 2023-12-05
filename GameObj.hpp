@@ -20,6 +20,7 @@ public:
     void Render();
     void Gravity();
     void Stop();
+    bool ShouldbeDeleted();
     //void HandleCollision(GameObject *g);
 };
 
@@ -58,9 +59,22 @@ class Oscillator : public Objects
 };
 
 
+
+
+class Coin : public Objects
+{
+    public:
+        int counter;
+        Coin(const char* filename, int x, int y);
+        void Update(GameObject *player, std::vector<Coin*> coins);
+        void coinCollision(GameObject *player, std::vector<Coin*> coins);
+};
+
 class Fire : public Objects
 {
     public:
         Fire(const char* filename, int x, int y);
-        void Update();
+        void Update(Player *player);
+        void FireCollision(Player *player);
 };
+

@@ -91,6 +91,11 @@ void Player::Update(const std::vector<GameObject*>& objects) {
         // Reset vertical velocity when the player is on the ground
         velocityY = 0;
     }
+    else if (ypos < 0)
+    {
+        ypos = 0;
+    }
+    
 
     if (xpos < 0) {
         xpos = 0;
@@ -120,8 +125,8 @@ void Objects::Update()
     xpos = xpos;
     ypos = ypos;
 
-    if (ypos > 500) {
-        ypos = 500;
+    if (ypos > 600) {
+        ypos = 600;
     }
 
     destR.x = xpos;
@@ -156,16 +161,33 @@ Objects::Objects(const char* filename,int x, int y) : GameObject(filename,x, y){
 
 void Player::Collision(const std::vector<GameObject*>& objects) 
 {
-    
-    for (GameObject* obj : objects) {
-        
+    std::vector<GameObject*> objectsToDelete;
+    for (GameObject* obj : objects) 
+    {
         Collision(obj);
+        if(obj->ShouldbeDeleted())
+        {
+            objectsToDelete.push_back(obj);
+        }
     }
+
+    for (GameObject* obj : objectsToDelete) 
+    {
+        //delete obj;
+    }
+
 }
 
 void Player::Collision(GameObject *g) {
+    
+
+    if(g == nullptr)
+    {
+        return;
+    }
+
     // Check for intersection in both x and y dimensions
-    if (destR.x < g->destR.x + g->destR.w &&
+    else if (destR.x < g->destR.x + g->destR.w &&
         destR.x + destR.w > g->destR.x &&
         destR.y < g->destR.y + g->destR.h &&
         destR.y + destR.h > g->destR.y)
@@ -205,6 +227,7 @@ void Player::Collision(GameObject *g) {
     }
 }
 
+
 Oscillator::Oscillator(const char* filename,int x, int y) :Objects(filename, x, y){};
 
 void Oscillator::Update()
@@ -239,8 +262,8 @@ void Oscillator::Update()
 }
 
 
-Fire::Fire(const char* filename, int x, int y) : Objects(filename , x, y){};
-void Fire::Update()
+Coin::Coin(const char* filename, int x, int y) : Objects(filename , x, y){};
+void Coin::Update(GameObject *player, std::vector<Coin*> coins)
 {
     srcR.w = 64;
     srcR.h = 64;
@@ -250,9 +273,112 @@ void Fire::Update()
     destR.h = srcR.h / 2;
 
     destR.x = xpos;
-    destR.y = ypos;   
+    destR.y = ypos;
+
+    coinCollision(player, coins);
+
 }
 
+
+bool GameObject::ShouldbeDeleted()
+{
+    if(typeid(*this)== typeid(Coin))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
+void Coin::coinCollision(GameObject *player, std::vector<Coin*> coins)
+{
+    Player* c = dynamic_cast<Player*>(player);
+    auto it = coins.begin();
+
+    for(auto element : coins)
+    {
+        if(c->destR.x < element->destR.x + element->destR.w && c->destR.x + c->destR.w > element->destR.x && c->destR.y < element->destR.y + element->destR.h && c->destR.y + c->destR.h > element->destR.y)
+        {
+            counter++;
+            int xOverlap = std::min(element->destR.x + element->destR.w, c->destR.x + c->destR.w) - std::max(element->destR.x, c->destR.x);
+            int yOverlap = std::min(element->destR.y + element->destR.h, c->destR.y + c->destR.h) - std::max(element->destR.y, c->destR.y);
+            if (xOverlap < yOverlap) 
+            {
+                // Adjust horizontal position
+                if (c->destR.x + element->destR.w / 2 < element->destR.x + element->destR.w / 2) {
+                    // Player is colliding from the left, adjust position to the left of the object
+                    c->xpos = element->destR.x - c->destR.w;
+                } else {
+                    // Player is colliding from the right, adjust position to the right of the object
+                    c->xpos = element->destR.x + element->destR.w;
+                }
+
+            // Stop horizontal movement
+
+            delete element;
+            element = nullptr;
+            velocityX = 0;
+            } 
+            else 
+            {
+                // Adjust vertical position
+                if (c->destR.y + c->destR.h / 2 < element->destR.y + element->destR.h / 2) 
+                {
+                    // Player is colliding from the top, adjust position above the object
+                    velocityY  = 0;
+                    //c->ypos = element->destR.y - c->destR.h;
+                    
+                } 
+                else 
+                {
+                    // Player is colliding from the bottom, adjust position below the object
+                    c->ypos = element->destR.y + element->destR.h;
+                }
+
+                // Stop vertical movement
+                delete element;
+                element = nullptr;
+                std::cout << "mairage homo" << std::endl;
+                velocityY = 0;
+            }
+
+            
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
+
+Fire::Fire(const char* filename, int x, int y) : Objects(filename , x, y){};
+void Fire::Update(Player *player)
+{
+    srcR.w = 160;
+    srcR.h = 106;
+    srcR.x = 0;
+    srcR.y = 0;
+    destR.w = srcR.w/2;
+    destR.h = srcR.h/2;
+
+    destR.x = xpos;
+    destR.y = ypos;
+
+    FireCollision(player);
+
+}
+
+void Fire::FireCollision(Player *player)
+{   
+    if (destR.x < player->destR.x + player->destR.w && destR.x + destR.w > player->destR.x && destR.y < player->destR.y + player->destR.h && destR.y + destR.h > player->destR.y)
+    {
+        delete player;
+    }
+}
 
 
 

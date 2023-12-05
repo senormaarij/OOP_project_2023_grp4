@@ -8,9 +8,11 @@ Player* player;
 GameObject *obj1;
 GameObject *obj2;
 GameObject *osc1;
-//GameObject *fire;
+Coin *coin;
+Fire *fire;
 std::vector<GameObject*> gameObjects;
-std::vector<GameObject*> map;
+std::vector<Coin*> coins;
+std::vector<Fire*> arson;
 int i = 0;
 SDL_Renderer* Game::Renderer = nullptr;
 
@@ -50,11 +52,14 @@ void Game::init(const char* title, int x, int y)
     obj1 = new Objects("assets/Sprite-0001.jpg", 600, 200);
     obj2 = new Objects("assets/platform.png", 400, 100);
     osc1 = new Oscillator("assets/oscillator.png", 400,500);
-    //fire = new Fire("assets/Daco_5889570.png",600,500);
+    coin = new Coin("assets/game coin.png",600,500);
+    fire = new Fire("assets/Daco_5889570.png",200,500);
 
     gameObjects.push_back(obj1);
     gameObjects.push_back(obj2);
     gameObjects.push_back(osc1);
+    coins.push_back(coin);
+    arson.push_back(fire);
     //gameObjects.push_back(fire);
 }
 
@@ -74,9 +79,18 @@ void Game::render()
         // Render starting screen elements here
     } else if (currentState == GAME_SCREEN) {
         player->Render();
-        obj1->Render();
-        obj2->Render();
-        osc1->Render();
+        for(auto element : gameObjects)
+        {
+            element->Render();
+        }
+        for(auto element : coins)
+        {
+            element->Render();
+        }
+        for(auto element: arson)
+        {
+            element->Render();
+        }
     }
 
     SDL_RenderPresent(Renderer);
@@ -90,6 +104,8 @@ void Game::update()
         obj1->Update();
         obj2->Update();
         osc1->Update();
+        coin->Update(player, coins);
+        fire->Update(player);
     }
 
     std::cout << """""""""" << std::endl;
