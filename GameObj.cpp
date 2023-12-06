@@ -376,7 +376,9 @@ void Fire::FireCollision(Player *player)
 {   
     if (destR.x < player->destR.x + player->destR.w && destR.x + destR.w > player->destR.x && destR.y < player->destR.y + player->destR.h && destR.y + destR.h > player->destR.y)
     {
-        delete player;
+        
+        Game::gameState = Game::END_SCREEN;
+
     }
 }
 

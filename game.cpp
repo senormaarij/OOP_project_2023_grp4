@@ -16,13 +16,8 @@ std::vector<Fire*> arson;
 int i = 0;
 SDL_Renderer* Game::Renderer = nullptr;
 
-enum GameState {
-    START_SCREEN,
-    GAME_SCREEN,
-    // Add more states as needed
-};
+Game::GameState Game::gameState = Game::START_SCREEN;
 
-GameState currentState = START_SCREEN;
 
 void Game::init(const char* title, int x, int y)
 {
@@ -73,11 +68,13 @@ void Game::render()
     SDL_RenderClear(Renderer);
 
     // Render based on the current state
-    if (currentState == START_SCREEN) {
+    if (Game::gameState == Game::START_SCREEN) {
 		SDL_Texture* startScreen = loadtexture::LoadTexture("assets/gameStart.png");
 		SDL_RenderCopy(Renderer, startScreen, NULL, NULL);
         // Render starting screen elements here
-    } else if (currentState == GAME_SCREEN) {
+    }
+
+     else if (Game::gameState == Game::GAME_SCREEN) {
         player->Render();
         for(auto element : gameObjects)
         {
@@ -91,6 +88,10 @@ void Game::render()
         {
             element->Render();
         }
+    }else if(Game::gameState == Game::END_SCREEN){
+            SDL_Texture* startScreen = loadtexture::LoadTexture("assets/game_over.png");
+		    SDL_RenderCopy(Renderer, startScreen, NULL, NULL);
+            //rendring the Ending Screen
     }
 
     SDL_RenderPresent(Renderer);
@@ -99,7 +100,7 @@ void Game::render()
 void Game::update()
 {
     // Update based on the current state
-    if (currentState == GAME_SCREEN) {
+    if (Game::gameState == Game::GAME_SCREEN) {
         player->Update(gameObjects);
         obj1->Update();
         obj2->Update();
@@ -124,7 +125,19 @@ void Game::events()
             switch (event.key.keysym.sym) {
                 case SDLK_RETURN:
                     // Transition to the game screen on pressing Enter
-                    currentState = GAME_SCREEN;
+                    
+                    if (Game::gameState == Game::START_SCREEN) {
+                        Game::gameState = Game::GAME_SCREEN;
+                    } else if (Game::gameState == Game::END_SCREEN) {
+                        // Transition from END_SCREEN to START_SCREEN
+                        run = false;
+                    }
+                    break;
+                case SDLK_SPACE:
+                    // Close the game only when in END_SCREEN
+                    if (Game::gameState == Game::END_SCREEN) {
+                        Game::gameState = Game::START_SCREEN;
+                    }
                     break;
                 case SDLK_LEFT:
                 case SDLK_RIGHT:
@@ -136,7 +149,7 @@ void Game::events()
 
     const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
-    if (currentState == GAME_SCREEN) {
+    if (Game::gameState == Game::GAME_SCREEN) {
         if (currentKeyStates[SDL_SCANCODE_UP]) {
             player->Jump();
         } else if (currentKeyStates[SDL_SCANCODE_LEFT]) {

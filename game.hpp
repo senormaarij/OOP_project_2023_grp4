@@ -22,9 +22,21 @@ class Game{
     SDL_Window* Window = NULL;
     
     bool run = true;
+
+
     
 
 public:
+
+    enum GameState {
+        START_SCREEN,
+        GAME_SCREEN,
+        END_SCREEN,
+        // Add more states as needed
+        };
+
+    static GameState gameState;
+
     int count = 0;
 
     void init(const char* title,int x, int y);
@@ -37,6 +49,7 @@ public:
     static SDL_Renderer* Renderer;
     
 };
+
 
 #endif // GAME_H
 
