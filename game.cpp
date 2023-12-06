@@ -74,7 +74,7 @@ void Game::render()
 
     // Render based on the current state
     if (currentState == START_SCREEN) {
-		SDL_Texture* startScreen = loadtexture::LoadTexture("assets/gameStart.webp");
+		SDL_Texture* startScreen = loadtexture::LoadTexture("assets/gameStart.png");
 		SDL_RenderCopy(Renderer, startScreen, NULL, NULL);
         // Render starting screen elements here
     } else if (currentState == GAME_SCREEN) {
