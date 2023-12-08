@@ -1,11 +1,9 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
 
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
-
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -22,6 +20,7 @@ class Game{
     SDL_Window* Window = NULL;
     
     bool run = true;
+    int current_state = 0;
     
 
 public:
@@ -38,5 +37,4 @@ public:
     
 };
 
-#endif // GAME_H
 

@@ -1,66 +1,68 @@
+#pragma once
+
 #include "game.hpp"
 #include "loadtexture.hpp"
 #include <vector>
+#include "vector.cpp"
+
 
 class GameObject {
 public:
-    int xpos;
-    int ypos;
-    float velocityY;
-    float velocityX;
-    SDL_Rect srcR, destR;
+    Vector2D pos;
+    SDL_Rect rect;
     SDL_Texture* objtex;
 
 public:
-    GameObject(const char* filename);
-    GameObject(const char* filename,int& x, int& y);
+    GameObject(int x, int y, SDL_Texture* o_tex);
+    SDL_Rect getRect();
+    SDL_Texture* getTex();
+    Vector2D getpos();
     virtual ~GameObject();
-
-    virtual void Update();
-    void Render();
-    void Gravity();
-    void Stop();
-    //void HandleCollision(GameObject *g);
 };
 
-class Player : public GameObject {
+class MovingObject: public GameObject {
 private:
+    Vector2D speed; 
     bool move = true;
 public:
 
-    Player(const char* filename);
+    MovingObject(int x, int y, SDL_Texture* o_tex);
+    bool Collision();
 
+};
+
+class Player: public MovingObject {
+    public:
     void Jump();
     void MoveRight();
     void MoveLeft();
-    void Update(const std::vector<GameObject*>& objects);
-    void Collision(GameObject *g);
-    void Collision(const std::vector<GameObject*>& objects);
-    //void Collisiony(GameObject *g);
-    //bool CollisionX(GameObject *g);
+    void Shoot();
+    void Gravity();
 
 
 };
 
-class Objects : public GameObject
-{
-    public:
-        static int counter;
-        Objects(const char* filename,int x, int y);
-        void Update();
+class FireBall: public MovingObject {
+    void P_Collide();
 };
 
-class Oscillator : public Objects
-{
-    public:
-        Oscillator(const char* filename, int x, int y);
-        void Update();
+class Platform: public GameObject{
+    void moveUp();
+    void moveDown();
+    void Oscillate();
+};
+
+class Coin: public GameObject{
+    void P_Collide();
+};
+
+class Button: public GameObject{
+
 };
 
 
-class Fire : public Objects
-{
-    public:
-        Fire(const char* filename, int x, int y);
-        void Update();
-};
+
+
+
+
+

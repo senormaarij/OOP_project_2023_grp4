@@ -43,6 +43,10 @@ void RenderWindow::render(GameObject& g_object){
 	SDL_RenderCopy(renderer, g_object.getTex(), &src, &dst);
 }
 
+void RenderWindow::render(Screen& g_screen){
+    SDL_RenderCopy(renderer,g_screen.getTex(), NULL, NULL);
+}
+
 void RenderWindow::display(){
 	SDL_RenderPresent(renderer);
 }

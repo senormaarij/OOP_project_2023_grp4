@@ -82,6 +82,8 @@ void Game::render()
     SDL_RenderPresent(Renderer);
 }
 
+
+
 void Game::update()
 {
     // Update based on the current state

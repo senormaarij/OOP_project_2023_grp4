@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <SDL_image.h>
+#include "Screen.hpp"
 #include "GameObj.hpp"
 
 
@@ -11,6 +12,7 @@ public:
 	void cleanUp();
 	void clear();
 	void render(GameObject& p_gobject);
+    void render(Screen& g_screen);
 	void display();
 
 	SDL_Window* getWindow();
