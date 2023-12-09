@@ -34,6 +34,7 @@ int main(int argc, char* args[]){
     SDL_Texture* p_fire_tex = loadtexture::LoadTexture("");
     SDL_Texture* p_air_tex = loadtexture::LoadTexture("");
     SDL_Texture* p_water_tex = loadtexture::LoadTexture("");
+    SDL_Texture* game_bg = loadtexture::LoadTexture("");
     SDL_Texture* mainscreen = loadtexture::LoadTexture("");
     SDL_Texture* losescreen = loadtexture::LoadTexture("");
     SDL_Texture* winscreen = loadtexture::LoadTexture("");
@@ -47,18 +48,23 @@ int main(int argc, char* args[]){
 
     /*-------------INITIALIZE PLAYER & LEVEL VECTORS-------------------*/
 
-    Player player(); //player constructor
+    Player player(100,100,p_fire_tex); //player constructor
     std::vector<GameObject> platforms = {};
 
 
     /*-------------------INITIALIZING OTHER GAME VALUES--------------------*/
     
-
-    enum gamestate {mainmenu , game, lose , win};
+    /*-------Game States---------*/
+    bool isWaiting = false ;
+    bool isInMenu = true ;// main menu screen is default screen   
+    bool isRestart = false;
+    bool isInGame = false;
+    bool isWin = false;
+    bool isLose = false;
+    
 
     bool gamerun = true; //To run the game 
-
-    gamestate state = mainmenu;  // main menu screen is default screen   
+ 
 
     Screen background(mainscreen);
 
@@ -71,28 +77,77 @@ int main(int argc, char* args[]){
 
     while(gamerun){
 
-        if (SDL_PollEvent(&event) && (event.type == SDL_QUIT)){gamerun = false;}
+        if (SDL_PollEvent(&event) && (event.type == SDL_QUIT)){
+            gamerun = false;
+        }
+
+
         
-        if(state == mainmenu){
+        if(isInMenu){
             window.clear();
             window.render(background);
             window.display();
         
         if(keyboard[SDL_SCANCODE_SPACE]){
-            state = game;
-            back
-        }
-        else if(state == game){
+            isInMenu = false;
+            isInGame = true;}
+        } 
 
-        }
+
+
+
+        else if(isInGame){
+            if(!isWaiting){
+                window.clear();
+                window.render(background);
+                window.display();
+                isWaiting = true;
+            }
+            else{
+            /*                              HANDLE PLAYER CONTROLS                                     */
+				if(keyboard[SDL_SCANCODE_UP]){
+                    player.Jump();
+				}
+				if(keyboard[SDL_SCANCODE_LEFT]){
+					player.MoveLeft();
+				}
+				if(keyboard[SDL_SCANCODE_LEFT]){
+					player.MoveRight();
+				}
+
+
+            }
+            /*-----------------RENDERING ALL THINGS------------------*/
+            window.clear();
+			window.render(background);
+
+            for(Entity& plat : platforms){
+                window.render(plat);
+            }
+            for(MovingEntity* ent : movingEntities){
+                window.render(*ent);
+            }
+            window.display();
+
 
             
 
 
 
+		
+		}
+	}
 
-        } 
+	window.cleanUp(); // DELETE EVERYTHING ON SCREEN
 
-    }
+	
 
+	// FREE ALL MEMORY   TO-DO
+	platforms.clear();
+  
+
+	SDL_Quit(); 
+
+    return 0; 
 }
+

@@ -33,6 +33,7 @@ public:
 
 class Player: public MovingObject {
     public:
+    Player(int x, int y, SDL_Texture* p_tex);
     void Jump();
     void MoveRight();
     void MoveLeft();
@@ -43,7 +44,7 @@ class Player: public MovingObject {
 };
 
 class FireBall: public MovingObject {
-    void P_Collide();
+    void Button_Collide();
 };
 
 class Platform: public GameObject{
@@ -53,11 +54,12 @@ class Platform: public GameObject{
 };
 
 class Coin: public GameObject{
-    void P_Collide();
+    void Player_Collide();
 };
 
 class Button: public GameObject{
-
+    void FireBalls_Collide();
+    void Player_Collide();
 };
 
 
