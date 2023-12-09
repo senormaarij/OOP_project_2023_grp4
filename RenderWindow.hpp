@@ -18,6 +18,8 @@ public:
 	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
 
+	SDL_Texture* LoadTexture(const char* filename);
+
 private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;

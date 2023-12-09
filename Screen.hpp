@@ -1,4 +1,4 @@
-#include "loadtexture.hpp"
+#include <SDL.h>
 #include "vector.cpp"
 
 class Screen{

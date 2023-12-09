@@ -2,54 +2,50 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include <SDL_mixer.h>
 #include <stdio.h>
 #include <iostream>
 #include <string>
 #include <stdlib.h>
 #include <time.h>
-#include "loadtexture.hpp"
 #include "GameObj.hpp"
 #include <vector>
-#include "RenderWIndow.hpp"
+#include "RenderWindow.hpp"
 
 
 
 int main(int argc, char* args[]){
 	if (SDL_Init(SDL_INIT_VIDEO) > 0)
-		std::cout << "HEY.. SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl; 
-
-	if (Mix_Init(0) == -1)
-		std::cout << "SDL_Mixer HAS FAILED. Error: " << SDL_GetError() << std::endl;
+		std::cout << "HEY.. SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl; //flag to check SDL initialized
 
 	srand(time(0));
 
 
     /*------------------WINDOW & RENDERER---------------*/
-	RenderWindow window("Elements", 600, 800);
+	RenderWindow window("Elements", 800, 600);
 	SDL_Renderer* renderer = window.getRenderer();
 
    
     /*--------------LOAD TEXTURE-----------------*/
-    SDL_Texture* p_fire_tex = loadtexture::LoadTexture("");
-    SDL_Texture* p_air_tex = loadtexture::LoadTexture("");
-    SDL_Texture* p_water_tex = loadtexture::LoadTexture("");
-    SDL_Texture* game_bg = loadtexture::LoadTexture("");
-    SDL_Texture* mainscreen = loadtexture::LoadTexture("");
-    SDL_Texture* losescreen = loadtexture::LoadTexture("");
-    SDL_Texture* winscreen = loadtexture::LoadTexture("");
-    SDL_Texture* fireball = loadtexture::LoadTexture("");
-    SDL_Texture* coin = loadtexture::LoadTexture("");
-    SDL_Texture* platform  = loadtexture::LoadTexture(""); 
-    SDL_Texture* wall = loadtexture::LoadTexture("");
-    SDL_Texture* water_platform = loadtexture::LoadTexture("");
-    SDL_Texture* death_platform = loadtexture::LoadTexture("");
-    SDL_Texture* button = loadtexture::LoadTexture("");
+    SDL_Texture* p_fire_tex = window.LoadTexture("assets/fire.png");
+    SDL_Texture* p_air_tex = window.LoadTexture("");
+    SDL_Texture* p_water_tex = window.LoadTexture("assets/water.png");
+    SDL_Texture* game_bg = window.LoadTexture("assets/game-bg.png");
+    SDL_Texture* mainscreen = window.LoadTexture("assets/main_screen.png");
+    SDL_Texture* losescreen = window.LoadTexture("");
+    SDL_Texture* winscreen = window.LoadTexture("");
+    SDL_Texture* fireball = window.LoadTexture("");
+    SDL_Texture* coin = window.LoadTexture("");
+    SDL_Texture* platform  = window.LoadTexture("assets/platform.png"); 
+    SDL_Texture* wall = window.LoadTexture("");
+    SDL_Texture* water_platform = window.LoadTexture("");
+    SDL_Texture* death_platform = window.LoadTexture("");
+    SDL_Texture* button = window.LoadTexture("");
 
     /*-------------INITIALIZE PLAYER & LEVEL VECTORS-------------------*/
 
-    Player player(100,100,p_fire_tex); //player constructor
-    std::vector<GameObject> platforms = {};
+    Player player(100,400,p_fire_tex); //player constructor
+    std::vector<GameObject> platforms; //vector of platforms
+
 
 
     /*-------------------INITIALIZING OTHER GAME VALUES--------------------*/
@@ -65,7 +61,6 @@ int main(int argc, char* args[]){
 
     bool gamerun = true; //To run the game 
  
-
     Screen background(mainscreen);
 
     SDL_Event event; //to poll events 
@@ -90,12 +85,10 @@ int main(int argc, char* args[]){
         
         if(keyboard[SDL_SCANCODE_SPACE]){
             isInMenu = false;
-            isInGame = true;}
+            isInGame = true;
+            background.switch_screen(game_bg);
+            }
         } 
-
-
-
-
         else if(isInGame){
             if(!isWaiting){
                 window.clear();
@@ -105,15 +98,19 @@ int main(int argc, char* args[]){
             }
             else{
             /*                              HANDLE PLAYER CONTROLS                                     */
-				if(keyboard[SDL_SCANCODE_UP]){
+				/* if(keyboard[SDL_SCANCODE_UP]){
                     player.Jump();
-				}
+				} */
 				if(keyboard[SDL_SCANCODE_LEFT]){
 					player.MoveLeft();
 				}
-				if(keyboard[SDL_SCANCODE_LEFT]){
+				if(keyboard[SDL_SCANCODE_RIGHT]){
 					player.MoveRight();
 				}
+                if (keyboard[SDL_SCANCODE_E]){
+                    //player.switch_element();
+                    std::cout << "Switching element" << std::endl;
+                }
 
 
             }
@@ -121,19 +118,11 @@ int main(int argc, char* args[]){
             window.clear();
 			window.render(background);
 
-            for(Entity& plat : platforms){
-                window.render(plat);
-            }
-            for(MovingEntity* ent : movingEntities){
-                window.render(*ent);
-            }
-            window.display();
-
+            window.render(platforms[0]);
+            window.render(player);
 
             
-
-
-
+            window.display();
 		
 		}
 	}
@@ -143,7 +132,7 @@ int main(int argc, char* args[]){
 	
 
 	// FREE ALL MEMORY   TO-DO
-	platforms.clear();
+	//platforms.clear();
   
 
 	SDL_Quit(); 
