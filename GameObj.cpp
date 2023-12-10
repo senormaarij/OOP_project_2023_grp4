@@ -2,6 +2,7 @@
 #include "loadtexture.hpp"
 #include "Game.hpp"  // Assuming Game::Renderer is defined here
 #include <cmath>
+#include "scoreManager.hpp"
 
 GameObject::GameObject(const char* filename) {
 
@@ -297,12 +298,14 @@ void Coin::coinCollision(GameObject *player, std::vector<Coin*> coins)
 {
     Player* c = dynamic_cast<Player*>(player);
     auto it = coins.begin();
-
+    ScoreManager scoreManager;
     for(auto element : coins)
     {
         if(c->destR.x < element->destR.x + element->destR.w && c->destR.x + c->destR.w > element->destR.x && c->destR.y < element->destR.y + element->destR.h && c->destR.y + c->destR.h > element->destR.y)
         {
             counter++;
+            scoreManager.increaseScore(1); 
+            
             int xOverlap = std::min(element->destR.x + element->destR.w, c->destR.x + c->destR.w) - std::max(element->destR.x, c->destR.x);
             int yOverlap = std::min(element->destR.y + element->destR.h, c->destR.y + c->destR.h) - std::max(element->destR.y, c->destR.y);
             if (xOverlap < yOverlap) 
@@ -376,7 +379,7 @@ void Fire::FireCollision(Player *player)
 {   
     if (destR.x < player->destR.x + player->destR.w && destR.x + destR.w > player->destR.x && destR.y < player->destR.y + player->destR.h && destR.y + destR.h > player->destR.y)
     {
-        
+        // delete player;
         Game::gameState = Game::END_SCREEN;
 
     }

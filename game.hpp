@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "scoreManager.hpp"
+
 
 
 class Game{
@@ -47,6 +49,8 @@ public:
     void close();
 
     static SDL_Renderer* Renderer;
+
+    ScoreManager scoreManager;
     
 };
 
