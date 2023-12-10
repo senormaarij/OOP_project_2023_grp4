@@ -47,6 +47,9 @@ void RenderWindow::render(GameObject& g_object){
 SDL_Texture* RenderWindow::LoadTexture(const char* filename){ 
  	SDL_Surface* playsurface = IMG_Load(filename);//creates a surface from an image
     SDL_Texture* texture  = SDL_CreateTextureFromSurface(renderer, playsurface); //creates a texture from a surface
+	if (texture == NULL){
+		std::cout << "Texture has failed to load. Error: " << SDL_GetError() << std::endl;
+	}
     SDL_FreeSurface(playsurface);//frees the surface or playsurface becomes NULL
     return texture;
 }

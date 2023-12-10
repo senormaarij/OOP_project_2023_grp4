@@ -12,6 +12,11 @@
 #include "RenderWindow.hpp"
 
 
+float getCurrentTime(){
+    return SDL_GetTicks()/1000.0f;
+}
+
+
 
 int main(int argc, char* args[]){
 	if (SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -36,7 +41,7 @@ int main(int argc, char* args[]){
     SDL_Texture* fireball = window.LoadTexture("");
     SDL_Texture* coin = window.LoadTexture("");
     SDL_Texture* platform  = window.LoadTexture("assets/platform.png"); 
-    SDL_Texture* wall = window.LoadTexture("");
+    SDL_Texture* wall = window.LoadTexture("assets/wall.png");
     SDL_Texture* water_platform = window.LoadTexture("");
     SDL_Texture* death_platform = window.LoadTexture("");
     SDL_Texture* button = window.LoadTexture("");
@@ -44,7 +49,11 @@ int main(int argc, char* args[]){
     /*-------------INITIALIZE PLAYER & LEVEL VECTORS-------------------*/
 
     Player player(100,400,p_fire_tex); //player constructor
-    std::vector<GameObject> platforms; //vector of platforms
+    std::vector<GameObject> platforms ; //vector of platforms
+    GameObject plat_1(0,600,platform);
+    GameObject wall_1 (0,400,wall);
+    platforms.push_back(plat_1);
+    platforms.push_back(wall_1);
 
 
 
@@ -67,17 +76,18 @@ int main(int argc, char* args[]){
 
     const Uint8* keyboard = SDL_GetKeyboardState(NULL); //Keyboard inputs 
 
+    float currentTime = getCurrentTime();
+    float lastJumpTime;
 
     /*------GAME LOOP------*/
 
     while(gamerun){
-
+        currentTime = getCurrentTime();
+        
         if (SDL_PollEvent(&event) && (event.type == SDL_QUIT)){
             gamerun = false;
         }
 
-
-        
         if(isInMenu){
             window.clear();
             window.render(background);
@@ -98,30 +108,30 @@ int main(int argc, char* args[]){
             }
             else{
             /*                              HANDLE PLAYER CONTROLS                                     */
-				/* if(keyboard[SDL_SCANCODE_UP]){
-                    player.Jump();
-				} */
+				
+                std::cout << player.canJump(platforms) << std::endl;
+                if(keyboard[SDL_SCANCODE_UP]&& player.canJump(platforms) && (currentTime - lastJumpTime > 1)){
+                    player.Jump(platforms);
+                    lastJumpTime = currentTime;
+				}
 				if(keyboard[SDL_SCANCODE_LEFT]){
-					player.MoveLeft();
+					player.MoveLeft(platforms);
 				}
 				if(keyboard[SDL_SCANCODE_RIGHT]){
-					player.MoveRight();
+					player.MoveRight(platforms);
 				}
-                if (keyboard[SDL_SCANCODE_E]){
-                    //player.switch_element();
-                    std::cout << "Switching element" << std::endl;
-                }
 
 
             }
+            player.Gravity(platforms);
+
+
             /*-----------------RENDERING ALL THINGS------------------*/
             window.clear();
-			window.render(background);
-
-            window.render(platforms[0]);
+            window.render(background);
+            window.render(wall_1);
+            window.render(plat_1);
             window.render(player);
-
-            
             window.display();
 		
 		}
