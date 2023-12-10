@@ -34,7 +34,7 @@ int main(int argc, char* args[]){
     SDL_Texture* p_fire_tex = window.LoadTexture("assets/fire.png");
     SDL_Texture* p_air_tex = window.LoadTexture("");
     SDL_Texture* p_water_tex = window.LoadTexture("assets/water.png");
-    SDL_Texture* game_bg = window.LoadTexture("assets/game-bg.png");
+    SDL_Texture* game_bg = window.LoadTexture("assets/bg.png");
     SDL_Texture* mainscreen = window.LoadTexture("assets/main_screen.png");
     SDL_Texture* losescreen = window.LoadTexture("");
     SDL_Texture* winscreen = window.LoadTexture("");
