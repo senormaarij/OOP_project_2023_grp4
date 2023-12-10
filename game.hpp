@@ -32,6 +32,7 @@ public:
 
     enum GameState {
         START_SCREEN,
+    
         GAME_SCREEN,
         END_SCREEN,
         // Add more states as needed

@@ -75,9 +75,18 @@ void Game::render()
     }
 
      else if (Game::gameState == Game::GAME_SCREEN) {
+        
+		
+        SDL_Texture* sky = loadtexture::LoadTexture("assets/sky.jpg");
+		SDL_RenderCopy(Renderer, sky, NULL, NULL);//Draws background to renderer
+
+	
+
+	   
         player->Render();
         for(auto element : gameObjects)
         {
+            //  SDL_Delay(10);	//causes sdl engine to delay for specified miliseconds
             element->Render();
         }
         for(auto element : coins)
