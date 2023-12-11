@@ -8,6 +8,7 @@ Player* player;
 GameObject *obj1;
 GameObject *obj2;
 GameObject *osc1;
+GameObject *ground;
 Coin *coin;
 Fire *fire;
 std::vector<GameObject*> gameObjects;
@@ -49,10 +50,14 @@ void Game::init(const char* title, int x, int y)
     osc1 = new Oscillator("assets/oscillator.png", 400,500);
     coin = new Coin("assets/game coin.png",600,500);
     fire = new Fire("assets/Daco_5889570.png",200,500);
+    ground = new Objects("assets/ground.png",400,600);
 
+    
+    gameObjects.push_back(ground);
     gameObjects.push_back(obj1);
     gameObjects.push_back(obj2);
     gameObjects.push_back(osc1);
+  
     coins.push_back(coin);
     arson.push_back(fire);
     //gameObjects.push_back(fire);
@@ -77,7 +82,7 @@ void Game::render()
      else if (Game::gameState == Game::GAME_SCREEN) {
         
 		
-        SDL_Texture* sky = loadtexture::LoadTexture("assets/sky.jpg");
+        SDL_Texture* sky = loadtexture::LoadTexture("assets/sky.png");
 		SDL_RenderCopy(Renderer, sky, NULL, NULL);//Draws background to renderer
 
 	

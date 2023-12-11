@@ -24,6 +24,7 @@ GameObject::GameObject(const char* filename, int& x, int& y)
     xpos = x;
     ypos = y;
     Objects::counter++;
+    std::cout<<"counter:"<<  Objects::counter<<std::endl;
 } 
 
 GameObject::~GameObject() {
