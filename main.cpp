@@ -1,4 +1,4 @@
-#pragma once
+
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -32,28 +32,35 @@ int main(int argc, char* args[]){
    
     /*--------------LOAD TEXTURE-----------------*/
     SDL_Texture* p_fire_tex = window.LoadTexture("assets/fire.png");
-    SDL_Texture* p_air_tex = window.LoadTexture("");
+    // SDL_Texture* p_air_tex = window.LoadTexture("");
     SDL_Texture* p_water_tex = window.LoadTexture("assets/water.png");
     SDL_Texture* game_bg = window.LoadTexture("assets/bg.png");
     SDL_Texture* mainscreen = window.LoadTexture("assets/main_screen.png");
-    SDL_Texture* losescreen = window.LoadTexture("");
-    SDL_Texture* winscreen = window.LoadTexture("");
-    SDL_Texture* fireball = window.LoadTexture("");
-    SDL_Texture* coin = window.LoadTexture("");
+    // SDL_Texture* losescreen = window.LoadTexture("");
+    // SDL_Texture* winscreen = window.LoadTexture("");
+    // SDL_Texture* fireball = window.LoadTexture("");
+    // SDL_Texture* coin = window.LoadTexture("");
     SDL_Texture* platform  = window.LoadTexture("assets/platform.png"); 
     SDL_Texture* wall = window.LoadTexture("assets/wall.png");
-    SDL_Texture* water_platform = window.LoadTexture("");
-    SDL_Texture* death_platform = window.LoadTexture("");
-    SDL_Texture* button = window.LoadTexture("");
+    // SDL_Texture* water_platform = window.LoadTexture("");
+    // SDL_Texture* death_platform = window.LoadTexture("");
+    // SDL_Texture* button = window.LoadTexture("");
 
     /*-------------INITIALIZE PLAYER & LEVEL VECTORS-------------------*/
 
-    Player player(100,400,p_fire_tex); //player constructor
-    std::vector<GameObject> platforms ; //vector of platforms
-    GameObject plat_1(0,600,platform);
-    GameObject wall_1 (0,400,wall);
+    Player player(100,100,p_fire_tex); //player constructor
+    std::vector<GameObject*> platforms ; //vector of platforms
+
+  
+    GameObject* plat_1 = new GameObject(0,600,wall);
+   
     platforms.push_back(plat_1);
-    platforms.push_back(wall_1);
+    
+
+    
+
+
+
 
 
 
@@ -83,7 +90,6 @@ int main(int argc, char* args[]){
 
     while(gamerun){
         currentTime = getCurrentTime();
-        
         if (SDL_PollEvent(&event) && (event.type == SDL_QUIT)){
             gamerun = false;
         }
@@ -109,18 +115,16 @@ int main(int argc, char* args[]){
             else{
             /*                              HANDLE PLAYER CONTROLS                                     */
 				
-                std::cout << player.canJump(platforms) << std::endl;
-                if(keyboard[SDL_SCANCODE_UP]&& player.canJump(platforms) && (currentTime - lastJumpTime > 1)){
-                    player.Jump(platforms);
-                    lastJumpTime = currentTime;
-				}
 				if(keyboard[SDL_SCANCODE_LEFT]){
 					player.MoveLeft(platforms);
 				}
 				if(keyboard[SDL_SCANCODE_RIGHT]){
 					player.MoveRight(platforms);
 				}
-
+                if(keyboard[SDL_SCANCODE_UP]){
+                    player.Jump(platforms);
+                
+                }
 
             }
             player.Gravity(platforms);
@@ -129,9 +133,16 @@ int main(int argc, char* args[]){
             /*-----------------RENDERING ALL THINGS------------------*/
             window.clear();
             window.render(background);
-            window.render(wall_1);
-            window.render(plat_1);
+            for (int i = 0; i < platforms.size(); i++) {
+                window.render(*platforms[i]);
+            }
+
+
+
             window.render(player);
+
+
+
             window.display();
 		
 		}

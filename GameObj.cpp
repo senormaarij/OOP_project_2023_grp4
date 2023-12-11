@@ -2,7 +2,8 @@
 #include "GameObj.hpp"
 
 GameObject::GameObject(int x, int y, SDL_Texture* o_tex) {
-    pos = Vector2D(x,y);
+    pos.x = x;
+    pos.y = y;
     objtex = o_tex;
     rect.x = 0;
     rect.y = 0;
@@ -33,96 +34,82 @@ Vector2D MovingObject::getSpeed(){return speed;}
 
 Player::Player(int x, int y, SDL_Texture* p_tex):MovingObject(x,y,p_tex){}
 
-void Player::MoveLeft(std::vector<GameObject> objects){
-    for (int i = 0; i < 5; i++){
+
+
+
+
+void Player::MoveLeft(std::vector<GameObject*> objects){
+    for( int i = 0; i < 8; i++){
         setpos(getpos().x - 1, getpos().y);
-        if (Collision(objects)){
-            setpos(getpos().x + 1, getpos().y);
-            break;
-        }
-    }
-}
+        for (int i = 0; i < objects.size(); i++) {
+            if (Collision(*(objects[i]))) {
 
-void Player::MoveRight(std::vector<GameObject> objects){
-    for (int i = 0; i < 5; i++){
-        setpos(getpos().x + 1, getpos().y);
-        if (Collision(objects)){
-            setpos(getpos().x - 1, getpos().y);
-            break;
-        }
-    }
-}
-
-void Player::Jump(std::vector<GameObject> objects){
-        for (int i = 0; i < 70; i++){
-        setpos(getpos().x, getpos().y - 1);
-            if (Collision(objects)){
-                setpos(getpos().x, getpos().y + 1);
+                setpos(getpos().x + 1, getpos().y);
                 break;
-            }    
-        }
-}
-
-void Player::Gravity(std::vector<GameObject> objects){
-    for (int i = 0; i < 5; i++){
-        setpos(getpos().x, getpos().y + 1);
-        if (Collision(objects)){
-            setpos(getpos().x, getpos().y - 1);
-            
-            break;
+            }
         }
     }
+}
+
+void Player::MoveRight(std::vector<GameObject*> objects){
+    for( int i = 0; i < 8; i++){
+        setpos(getpos().x + 1, getpos().y);
+        for (int i = 0; i < objects.size(); i++) {
+            if (Collision(*(objects[i]))) {
+                setpos(getpos().x - 1, getpos().y);
+                break;
+            }
+        }
+    }
+}
+
+void Player::Jump(std::vector<GameObject*> objects){
+    if(!isJumping){
+        setSpeed(0,-13.0f);
+        isJumping = true;
+    }
+}
+
+
+void Player::Gravity(std::vector<GameObject*> objects){
+   if (getpos().y < 500) {
+        setSpeed(getSpeed().x, getSpeed().y + 0.6f) ; // gravity force
+        float originalY = getpos().y; // original position
+
+        setpos(getpos().x, getpos().y + getSpeed().y); // Move player
+
+        bool collided = false;
+        for (int i = 0; i < objects.size(); i++) {
+            if (Collision(*objects[i])) {
+                collided = true;
+                if (getSpeed().y > 0) {
+                    setpos(getpos().x, objects[i]->getpos().y - getRect().h);
+                    isJumping = false;
+                    setSpeed(getSpeed().x,0.0f);
+                } else if (getSpeed().y  < 0) {  
+                    setpos(getpos().x,objects[i]->getpos().y  + objects[i]->getRect().h); 
+                    setSpeed(getSpeed().x,0.0f);
+                }
+                break;
+            }
+        }
+
+        if (!collided) {
+            isJumping = true;
+        }
+    } else {
+        isJumping = false;
+        setSpeed(getSpeed().x,0.0f) ;
+        setpos(getpos().x, 500);
+    }
+}
+
+bool Player::Collision(GameObject& platform){	
+     return (getpos().y + getRect().h > platform.getpos().y &&
+                getpos().y < platform.getpos().y + platform.getRect().h &&
+                getpos().x + getRect().w > platform.getpos().x &&
+                getpos().x < platform.getpos().x + platform.getRect().w);
     
-}
-
-bool Player::Collision(std::vector<GameObject>& objects){	
-	int gWidth, gHeight;
-	bool collisionDetected = false;
-
-	int pWidth  = getRect().w; // Get size of player.
-	int pHeight = getRect().h;
-
-	for (GameObject& ground : objects){
-		gWidth  = ground.getRect().w; // Get size of ground block.
-		gHeight = ground.getRect().h;
-
-		collisionDetected = (( (getpos().y + pHeight) >  (ground.getpos().y)            )    // Player is within ground-height range.
-						&&   ( (getpos().y)           <  (ground.getpos().y + gHeight)  )
-						&&   ( (getpos().x + pWidth)  >  (ground.getpos().x)            )    // Player is within ground-width range.
-						&&   ( (getpos().x)           <  (ground.getpos().x + gWidth)   ) );
-
-		if (collisionDetected)
-			break;
-	}
-
-	collisionDetected = (    ( (getpos().y + pHeight) >  600   )    // Player is outside screen Height range.
-						||   ( (getpos().x + pWidth)  >  800  )    // Player is outside screen Width range.
-						||   ( (getpos().x)           <  0    ))
-						|| collisionDetected ;
-	
-	return collisionDetected;	
-}
-
-
-bool Player::canJump(std::vector<GameObject> platforms)
-{	
-	int gWidth;
-	bool canJump = false;
-
-	int pWidth  = getRect().w; // Get size of player.
-	int pHeight = getRect().h;
-
-	for (GameObject& ground : platforms){
-		gWidth  = ground.getRect().w; // Get size of ground block.
-
-		canJump = ((    getpos().y + pHeight  ==  ground.getpos().y              )    // Player is standing on platform.
-			      &&   (getpos().x + pWidth   >=  ground.getpos().x + 5          )    // Player is within platform-width range.
-		     	  &&   (getpos().x  <=  ground.getpos().x + gWidth - 5 ) );
-
-		if (canJump)
-			break;
-	}
-	return canJump;	
 }
 
 

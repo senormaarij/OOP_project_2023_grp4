@@ -11,7 +11,7 @@ public:
 	RenderWindow(const char* p_title, int p_w, int p_h);
 	void cleanUp();
 	void clear();
-	void render(GameObject& p_gobject);
+	void render(GameObject& g_object);
     void render(Screen& g_screen);
 	void display();
 

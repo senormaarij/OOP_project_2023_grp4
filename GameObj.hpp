@@ -39,45 +39,23 @@ public:
 
 
 class Player: public MovingObject {
+    private:
+    bool isJumping = false;
 
     public:
     Player(int x, int y, SDL_Texture* p_tex);
-    bool Collision(std::vector<GameObject>& objects);
-    bool canJump(std::vector<GameObject> objects);
-    void Jump(std::vector<GameObject> objects);
+    bool Collision(GameObject& platform);
+    void MoveRight(std::vector<GameObject*> objects);
+    void MoveLeft( std::vector<GameObject*> objects);
+    void Jump(std::vector<GameObject*> objects);
+    void Gravity(std::vector<GameObject*> objects);
     
-    //void switch_element();
-    void MoveRight(std::vector<GameObject> objects);
-    void MoveLeft( std::vector<GameObject> objects);
-    // void Shoot();
-    void Gravity(std::vector<GameObject> objects);
+
+
+
+
+
 };
-
-
-
-
-/* class FireBall: public MovingObject {
-    void Button_Collide();
-};
- */
-
-
-/* class Platform: public GameObject{
-    void moveUp();
-    void moveDown();
-    void Oscillate();
-}; */
-
-/* class Coin: public GameObject{
-    bool Collision() override;
-}; */
-
-/* class Button: public GameObject{
-    bool Collision() override;
-};
- */
-
-
 
 
 
