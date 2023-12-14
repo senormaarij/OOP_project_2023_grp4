@@ -36,25 +36,38 @@ int main(int argc, char* args[]){
     SDL_Texture* p_water_tex = window.LoadTexture("assets/water.png");
     SDL_Texture* game_bg = window.LoadTexture("assets/bg.png");
     SDL_Texture* mainscreen = window.LoadTexture("assets/main_screen.png");
+    SDL_Texture* border = window.LoadTexture("assets/borders.png");
     // SDL_Texture* losescreen = window.LoadTexture("");
     // SDL_Texture* winscreen = window.LoadTexture("");
     // SDL_Texture* fireball = window.LoadTexture("");
     // SDL_Texture* coin = window.LoadTexture("");
     SDL_Texture* platform  = window.LoadTexture("assets/platform.png"); 
     SDL_Texture* wall = window.LoadTexture("assets/wall.png");
+    //SDL_Texture* osc_platform = window.LoadTexture("");
     // SDL_Texture* water_platform = window.LoadTexture("");
     // SDL_Texture* death_platform = window.LoadTexture("");
     // SDL_Texture* button = window.LoadTexture("");
+    SDL_Texture*  s_platform = window.LoadTexture("assets/platform_small.png");
+    SDL_Texture*  box = window.LoadTexture("assets/box.png");
 
     /*-------------INITIALIZE PLAYER & LEVEL VECTORS-------------------*/
-
-    Player player(100,100,p_fire_tex); //player constructor
+    Player player2(50,500,p_water_tex); //player constructor
+    Player player1(100,500,p_fire_tex); //player constructor
     std::vector<GameObject*> platforms ; //vector of platforms
 
   
     GameObject* plat_1 = new GameObject(0,600,wall);
+    GameObject* plat_2 = new GameObject(0,400,s_platform);
+    GameObject* plat_3 = new GameObject(0,500,border);
+    GameObject* plat_4 = new GameObject(800,500,border);
    
     platforms.push_back(plat_1);
+    platforms.push_back(plat_2);
+    platforms.push_back(plat_3);
+    platforms.push_back(plat_4);
+
+    
+
     
 
     
@@ -116,18 +129,30 @@ int main(int argc, char* args[]){
             /*                              HANDLE PLAYER CONTROLS                                     */
 				
 				if(keyboard[SDL_SCANCODE_LEFT]){
-					player.MoveLeft(platforms);
+					player1.MoveLeft(platforms);
 				}
 				if(keyboard[SDL_SCANCODE_RIGHT]){
-					player.MoveRight(platforms);
+					player1.MoveRight(platforms);
 				}
                 if(keyboard[SDL_SCANCODE_UP]){
-                    player.Jump(platforms);
-                
+                    player1.Jump(platforms);
+                }
+                if(keyboard[SDL_SCANCODE_A]){
+                    player2.MoveLeft(platforms);
+                }
+                if(keyboard[SDL_SCANCODE_D]){
+                    player2.MoveRight(platforms);
+                }
+                if(keyboard[SDL_SCANCODE_W]){
+                    player2.Jump(platforms);
                 }
 
             }
-            player.Gravity(platforms);
+            player1.Gravity(platforms);
+            player2.Gravity(platforms);
+
+            
+
 
 
             /*-----------------RENDERING ALL THINGS------------------*/
@@ -136,15 +161,16 @@ int main(int argc, char* args[]){
             for (int i = 0; i < platforms.size(); i++) {
                 window.render(*platforms[i]);
             }
+    
 
 
 
-            window.render(player);
+            window.render(player1);
+            window.render(player2);
 
 
 
             window.display();
-		
 		}
 	}
 
