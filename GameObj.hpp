@@ -51,20 +51,16 @@ class Player: public MovingObject {
 
 
 
-class Platform: public MovingObject {
+class MovingPlatform: public MovingObject {
     public:
-    Platform(int x, int y, SDL_Texture* p_tex);
+    MovingPlatform(int x, int y, SDL_Texture* p_tex);
     void Moving();
    
 };
 
 class Coin: public GameObject {
-    private:
-    int counter = 0;
-
     public:
-    int getCount(){return counter;}
-    void Collect();
+    Coin(int x, int y, SDL_Texture* c_tex);
     bool Collision(Player* player);
 };
 
@@ -73,11 +69,16 @@ class Door: public GameObject{
     bool Collision(Player* player);
 };
 
-class button: public GameObject{
+class Button: public GameObject{
     bool Collision(Player* player);
 
 };
 
+
+class Box: public MovingObject{
+    bool Collision(Player* player);
+
+};
 
 
 

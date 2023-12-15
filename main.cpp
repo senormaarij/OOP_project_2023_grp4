@@ -40,11 +40,12 @@ int main(int argc, char* args[]){
     // SDL_Texture* losescreen = window.LoadTexture("");
     // SDL_Texture* winscreen = window.LoadTexture("");
     // SDL_Texture* fireball = window.LoadTexture("");
-    // SDL_Texture* coin = window.LoadTexture("");
+    SDL_Texture* coin = window.LoadTexture("assets/s_jewel.png");
     SDL_Texture* platform  = window.LoadTexture("assets/platform.png"); 
     SDL_Texture* wall = window.LoadTexture("assets/wall.png");
     //SDL_Texture* osc_platform = window.LoadTexture("");
-    // SDL_Texture* water_platform = window.LoadTexture("");
+    SDL_Texture* water_platform = window.LoadTexture("assets/water_plat.png");
+    SDL_Texture* fire_platform = window.LoadTexture("assets/fire_plat.png");
     // SDL_Texture* death_platform = window.LoadTexture("");
     // SDL_Texture* button = window.LoadTexture("");
     SDL_Texture*  s_platform = window.LoadTexture("assets/platform_small.png");
@@ -58,11 +59,19 @@ int main(int argc, char* args[]){
     std::vector<GameObject*> platforms ; //vector of platforms
     std::vector<Coin*> coins ; //vector of coins
     std::vector<Door*> doors ; //vector of doors
+    std::vector<GameObject*> firePlatform; //vector of firePlatforms
+    std::vector<GameObject*> waterPlatform; //vector of waterPlatforms
+
+
+
+
+
   
     GameObject* plat_1 = new GameObject(0,600,wall);
     GameObject* plat_2 = new GameObject(0,400,s_platform);
     GameObject* plat_3 = new GameObject(0,500,border);
     GameObject* plat_4 = new GameObject(800,500,border);
+
    
     platforms.push_back(plat_1);
     platforms.push_back(plat_2);
@@ -72,13 +81,11 @@ int main(int argc, char* args[]){
 
 
 
-    
 
-    
-
-    
-
-
+    Coin* c1 = new Coin(100,450,coin);
+    Coin* c2 = new Coin(250,450,coin);
+    coins.push_back(c1);
+    coins.push_back(c2);
 
 
 
@@ -155,14 +162,22 @@ int main(int argc, char* args[]){
 
             }
 
-            /*----------Game UPDATES---------------*/
+            /*---------------GAME UPDATES---------------*/
             player1.Gravity(platforms);
             player2.Gravity(platforms);
+
           
-            // for(auto& coin: coins){
-            //     coin->Collision(&player1);
-            //     coin->Collision(&player2);
-            // }
+
+            /*------------COIN HANDLING---------------*/
+             for (int i = 0; i < coins.size(); i++) {
+                
+                if(coins[i]->Collision(&player1) || coins[i]->Collision(&player2)){
+                    coins.erase(coins.begin() + i);
+                }
+            }
+
+
+            /*------------DOOR HANDLING---------------*/
             // for(auto& door: doors){
             //     door->Collision(&player1);
             //     door->Collision(&player2);
@@ -178,13 +193,17 @@ int main(int argc, char* args[]){
             for (int i = 0; i < platforms.size(); i++) {
                 window.render(*platforms[i]);
             }
-            // for(auto& coin: coins){
-            //     window.render(*coin);
-            // }
-            // for(auto& door: doors){
-            //     window.render(*door);
-            // }
-    
+            for (int i = 0; i < firePlatform.size(); i++) {
+                window.render(*firePlatform[i]);
+            }
+            for (int i = 0; i < waterPlatform.size(); i++) {
+                window.render(*waterPlatform[i]);
+            }
+
+
+            for(auto& coin: coins){
+                window.render(*coin);
+            }
 
 
 
