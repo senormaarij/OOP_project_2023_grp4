@@ -15,17 +15,13 @@ private:
 public:
     GameObject(int x, int y, SDL_Texture* o_tex);
     void changeTex(SDL_Texture* o_tex);
-
     SDL_Rect getRect();
-
     SDL_Texture* getTex();
-
     Vector2D getpos();
-
     void setpos(int x, int y);
     virtual ~GameObject();
 };
-//
+
 
 class MovingObject: public GameObject {
 private:
@@ -67,15 +63,18 @@ class Coin: public GameObject {
     int counter = 0;
 
     public:
+    int getCount(){return counter;}
     void Collect();
-    void Respawn();
+    bool Collision(Player* player);
 };
 
 class Door: public GameObject{
-
+    public:
+    bool Collision(Player* player);
 };
 
 class button: public GameObject{
+    bool Collision(Player* player);
 
 };
 

@@ -31,9 +31,9 @@ int main(int argc, char* args[]){
 
    
     /*--------------LOAD TEXTURE-----------------*/
-    SDL_Texture* p_fire_tex = window.LoadTexture("assets/fire.png");
+    SDL_Texture* p_fire_tex = window.LoadTexture("assets/FireChar.png");
     // SDL_Texture* p_air_tex = window.LoadTexture("");
-    SDL_Texture* p_water_tex = window.LoadTexture("assets/water.png");
+    SDL_Texture* p_water_tex = window.LoadTexture("assets/WaterChar.png");
     SDL_Texture* game_bg = window.LoadTexture("assets/bg.png");
     SDL_Texture* mainscreen = window.LoadTexture("assets/main_screen.png");
     SDL_Texture* border = window.LoadTexture("assets/borders.png");
@@ -53,8 +53,11 @@ int main(int argc, char* args[]){
     /*-------------INITIALIZE PLAYER & LEVEL VECTORS-------------------*/
     Player player2(50,500,p_water_tex); //player constructor
     Player player1(100,500,p_fire_tex); //player constructor
-    std::vector<GameObject*> platforms ; //vector of platforms
 
+
+    std::vector<GameObject*> platforms ; //vector of platforms
+    std::vector<Coin*> coins ; //vector of coins
+    std::vector<Door*> doors ; //vector of doors
   
     GameObject* plat_1 = new GameObject(0,600,wall);
     GameObject* plat_2 = new GameObject(0,400,s_platform);
@@ -65,6 +68,9 @@ int main(int argc, char* args[]){
     platforms.push_back(plat_2);
     platforms.push_back(plat_3);
     platforms.push_back(plat_4);
+
+
+
 
     
 
@@ -148,9 +154,20 @@ int main(int argc, char* args[]){
                 }
 
             }
+
+            /*----------Game UPDATES---------------*/
             player1.Gravity(platforms);
             player2.Gravity(platforms);
-
+          
+            // for(auto& coin: coins){
+            //     coin->Collision(&player1);
+            //     coin->Collision(&player2);
+            // }
+            // for(auto& door: doors){
+            //     door->Collision(&player1);
+            //     door->Collision(&player2);
+            // }
+    
             
 
 
@@ -161,6 +178,12 @@ int main(int argc, char* args[]){
             for (int i = 0; i < platforms.size(); i++) {
                 window.render(*platforms[i]);
             }
+            // for(auto& coin: coins){
+            //     window.render(*coin);
+            // }
+            // for(auto& door: doors){
+            //     window.render(*door);
+            // }
     
 
 
