@@ -10,6 +10,9 @@
 #include "GameObj.hpp"
 #include <vector>
 #include "RenderWindow.hpp"
+#include "Player.hpp"
+#include "Coin.hpp"
+#include "Door.hpp"
 
 
 float getCurrentTime(){
@@ -42,7 +45,7 @@ int main(int argc, char* args[]){
     // SDL_Texture* fireball = window.LoadTexture("");
     SDL_Texture* coin = window.LoadTexture("assets/s_jewel.png");
     SDL_Texture* platform  = window.LoadTexture("assets/platform.png"); 
-    SDL_Texture* wall = window.LoadTexture("assets/wall.png");
+    SDL_Texture* ground = window.LoadTexture("assets/ground.png");
     //SDL_Texture* osc_platform = window.LoadTexture("");
     SDL_Texture* water_platform = window.LoadTexture("assets/water_plat.png");
     SDL_Texture* fire_platform = window.LoadTexture("assets/fire_plat.png");
@@ -67,16 +70,41 @@ int main(int argc, char* args[]){
 
 
   
-    GameObject* plat_1 = new GameObject(0,600,wall);
+    GameObject* plat_1 = new GameObject(0,600,ground);
     GameObject* plat_2 = new GameObject(0,400,s_platform);
-    GameObject* plat_3 = new GameObject(0,500,border);
-    GameObject* plat_4 = new GameObject(800,500,border);
+    GameObject* plat_3 = new GameObject(200,400,s_platform);
+    GameObject* plat_4 = new GameObject(400,400,s_platform);
+    GameObject* plat_5 = new GameObject(400,275,s_platform);
+    GameObject* plat_6 = new GameObject(600,275,s_platform);
+    GameObject* plat_7 = new GameObject(200,150,s_platform);
+    GameObject* plat_8 = new GameObject(400,150,s_platform);
+    GameObject* plat_9 = new GameObject(0,150,s_platform);
+    GameObject* plat_10 = new GameObject(200,275,s_platform);
+    
+
+
+
+
+    GameObject* wall1 = new GameObject(0,500,border);
+    GameObject* wall2 = new GameObject(800,500,border);
 
    
     platforms.push_back(plat_1);
     platforms.push_back(plat_2);
     platforms.push_back(plat_3);
     platforms.push_back(plat_4);
+    platforms.push_back(plat_5);
+    platforms.push_back(plat_6);
+    platforms.push_back(plat_7);
+    platforms.push_back(plat_8);
+    platforms.push_back(plat_9);
+    platforms.push_back(plat_10);
+
+
+
+    platforms.push_back(wall1);
+    platforms.push_back(wall2);
+
 
 
 

@@ -32,53 +32,6 @@ GameObject::~GameObject() {
 
 
 
-MovingObject::MovingObject(int x, int y, SDL_Texture* m_tex):GameObject(x,y,m_tex){} 
-
-void MovingObject::setSpeed(float m_x, float m_y){speed.x = m_x; speed.y = m_y;}
-
-Vector2D MovingObject::getSpeed(){return speed;}
-
-
-void MovingObject::Gravity(std::vector<GameObject*> objects){
-   if (getpos().y < 500) {
-        setSpeed(getSpeed().x, getSpeed().y + 0.6f) ; // gravity force
-        float originalY = getpos().y; // original position
-
-        setpos(getpos().x, getpos().y + getSpeed().y); // Move player
-
-        bool collided = false;
-        for (int i = 0; i < objects.size(); i++) {
-            if (Collision(*objects[i])) {
-                collided = true;
-                if (getSpeed().y > 0) {
-                    setpos(getpos().x, objects[i]->getpos().y - getRect().h);
-                    isJumping = false;
-                    setSpeed(getSpeed().x,0.0f);
-                } else if (getSpeed().y  < 0) {  
-                    setpos(getpos().x,objects[i]->getpos().y  + objects[i]->getRect().h); 
-                    setSpeed(getSpeed().x,0.0f);
-                }
-                break;
-            }
-        }
-
-        if (!collided) {
-            isJumping = true;
-        }
-    } else {
-        isJumping = false;
-        setSpeed(getSpeed().x,0.0f) ;
-        setpos(getpos().x, 500);
-    }
-}
-
-bool MovingObject::Collision(GameObject& platform){	
-     return (getpos().y + getRect().h > platform.getpos().y &&
-                getpos().y < platform.getpos().y + platform.getRect().h &&
-                getpos().x + getRect().w > platform.getpos().x &&
-                getpos().x < platform.getpos().x + platform.getRect().w);
-    
-}
 
 
 
@@ -87,49 +40,8 @@ bool MovingObject::Collision(GameObject& platform){
 
 
 
-Player::Player(int x, int y, SDL_Texture* p_tex):MovingObject(x,y,p_tex){}
 
 
-void Player::MoveLeft(std::vector<GameObject*> objects){
-    for( int i = 0; i < 8; i++){
-        setpos(getpos().x - 1, getpos().y);
-        for (int i = 0; i < objects.size(); i++) {
-            if (Collision(*(objects[i]))) {
-
-                setpos(getpos().x + 1, getpos().y);
-                break;
-            }
-        }
-    }
-}
-
-void Player::MoveRight(std::vector<GameObject*> objects){
-    for( int i = 0; i < 8; i++){
-        setpos(getpos().x + 1, getpos().y);
-        for (int i = 0; i < objects.size(); i++) {
-            if (Collision(*(objects[i]))) {
-                setpos(getpos().x - 1, getpos().y);
-                break;
-            }
-        }
-    }
-}
-
-void Player::Jump(std::vector<GameObject*> objects){
-    if(!isJumping){
-        setSpeed(0,-13.0f);
-        isJumping = true;
-    }
-}
-
-Coin::Coin(int x, int y, SDL_Texture* c_tex):GameObject(x,y,c_tex){}
-
-bool Coin::Collision(Player* player){
-    return (getpos().y + getRect().h > player->getpos().y &&
-            getpos().y < player->getpos().y + player->getRect().h &&
-            getpos().x + getRect().w > player->getpos().x &&
-            getpos().x < player->getpos().x + player->getRect().w);
-}
 
 
 
