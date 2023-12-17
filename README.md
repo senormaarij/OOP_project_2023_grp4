@@ -20,7 +20,7 @@ SDL_mixer: SDL extension for handling audio.
 
 Installation
 Ensure you have SDL, SDL_image, and SDL_mixer libraries installed on your system.
-Clone the Elements repository: git clone https://github.com/your-username/elements.git
+Clone the repository.
 Compile the code using a C++ compiler with SDL, SDL_image, and SDL_mixer flags. 
 
 Copy code
