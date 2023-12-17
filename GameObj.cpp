@@ -22,6 +22,15 @@ void GameObject::changeTex(SDL_Texture* o_tex){objtex = o_tex;} //changes the te
 
 SDL_Texture* GameObject::getTex(){return objtex;} //gets the texture
 
+
+bool GameObject::Collision(GameObject*  object){	 //checks for collision
+    return (pos.y + rect.h > object->getpos().y &&
+            pos.y < object->getpos().y + object->getRect().h &&
+            pos.x + rect.w > object->getpos().x &&
+            pos.x < object->getpos().x + object->getRect().w);
+    
+}
+
 GameObject::~GameObject() {
     SDL_DestroyTexture(objtex);
 }

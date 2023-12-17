@@ -15,7 +15,7 @@ void MovingObject::Gravity(std::vector<GameObject*> objects){
 
         bool collided = false;
         for (int i = 0; i < objects.size(); i++) {
-            if (Collision(*objects[i])) {
+            if (Collision(objects[i])) {
                 collided = true;
                 if (getSpeed().y > 0) {
                     setpos(getpos().x, objects[i]->getpos().y - getRect().h);
@@ -39,10 +39,3 @@ void MovingObject::Gravity(std::vector<GameObject*> objects){
     }
 }
 
-bool MovingObject::Collision(GameObject& platform){	
-     return (getpos().y + getRect().h > platform.getpos().y &&
-                getpos().y < platform.getpos().y + platform.getRect().h &&
-                getpos().x + getRect().w > platform.getpos().x &&
-                getpos().x < platform.getpos().x + platform.getRect().w);
-    
-}

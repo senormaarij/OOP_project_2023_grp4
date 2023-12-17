@@ -138,7 +138,6 @@ int main(int argc, char* args[]){
     const Uint8* keyboard = SDL_GetKeyboardState(NULL); //Keyboard inputs 
 
     float currentTime = getCurrentTime();
-    float lastJumpTime;
 
     /*------GAME LOOP------*/
 
@@ -201,6 +200,8 @@ int main(int argc, char* args[]){
                 
                 if(coins[i]->Collision(&player1) || coins[i]->Collision(&player2)){
                     coins.erase(coins.begin() + i);
+                    coins[i]->increaseCoinCounter();
+                    std::cout<<coins[i]->GetCoinCounter();
                 }
             }
 
@@ -210,6 +211,14 @@ int main(int argc, char* args[]){
             //     door->Collision(&player1);
             //     door->Collision(&player2);
             // }
+
+            /*------------PLATFORM HANDLING---------------*/
+
+
+
+
+            /*------------PLAYER HANDLING---------------*/
+            
     
             
 

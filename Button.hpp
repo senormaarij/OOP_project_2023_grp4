@@ -4,7 +4,7 @@
 #include "Player.hpp"
 
 class Button: public GameObject{
-    bool Collision(Player* player);
+    bool Collision(GameObject* GameObject) override;
 
 };
 

@@ -18,6 +18,7 @@ public:
     SDL_Rect getRect();
     SDL_Texture* getTex();
     Vector2D getpos();
+    virtual bool Collision(GameObject*  object);
     void setpos(int x, int y);
     virtual ~GameObject();
 };
