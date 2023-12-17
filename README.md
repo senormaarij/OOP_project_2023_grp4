@@ -27,7 +27,7 @@ Copy code
 g++ *.cpp -IC:\mingw_dev_lib\include\SDL2 -LC:\mingw_dev_lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_Mixer -o game.exe
 
 
-How to Play
+How to Play:
 Run the compiled executable.
 Use the Spacebar to navigate from the main menu to the gameplay.
 Control the Fire character using the arrow keys (left, right, up).
